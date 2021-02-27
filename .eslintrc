@@ -1,0 +1,24 @@
+{
+  "env": { "browser": true },
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "globals": {
+    "ConsoleLogHTML": "readonly",
+    "ace": "readonly",
+    "js_beautify": "readonly",
+    "sections": "readonly"
+  },
+  "rules": {
+    "quotes": ["error", "single"],
+    "no-unused-vars": ["off"],
+    "func-style": ["error", "declaration", { "allowArrowFunctions": false }],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "never"]
+  }
+}
