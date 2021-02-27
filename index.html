@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+  <!-- Google translate -->
+  <meta name="google" content="notranslate" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAhBJREFUeNrEV411gjAQjjwGcISMgBvIBu0ElQmKEyATqBPABrUTABNIN2AENmjv+r68F9MTQWnMe9FcuMv984VFlmWRUmpPc638jprmNqSfgmak/A92uAgt5as8z1sfmhH1M+sOzaZRTg/Zso7ojtZLGNgS3ROtaa1pXd9QcDWdLMu6iOeXDgTBCmnhkYJOQfN+NaSAnhkZcbqyoSPfoTga0C1ok5rG4hsqrqEIXcguyKJvhGbhswKN3tDa2D2hEy5SkD3bgNyz7uzCAKqBnecayP604bNT8Ig3Gu+IZmokw5kc2dwLZnOl4B3/n7OnAHjwAQ9fKcQn5zl7zzw9zZLoF/DX4O/vjoCFWusR3p8cZSxzxhnTDYBnDCAa3iWC92sLznO0M/MkkNEAoM0kA0hgj6peAjxiOrgUWN8MADF8W+8U5o0hy2cUOPO2AfAqtZBLvKig9YxnRwH3WWZloV8qwXhwBS5NLm0lUuspXF5OAzwa616C8UCwvIPlxus9WV6gG6TiO0qdwzK47Jp7xcpO02ANgJFzWFqeVMYIt/WEtq2sCJWooW7SewAtldCBX/AkQm3sBlrPXONMZ2zp+eGhNyEOiNFmB6n1nHHAfnxL+WgswC24RojF1nMiNxqQ7sECfa34fMFxMubb4N8MQNi7uS4kgQM8vq5jkR2BFlV9Np9LHkcbIKe18j9YZ/IjwADZpe7fUbBvEAAAAABJRU5ErkJggg==" />
+
+  <!-- Pinned Sites  -->
+  <meta name="application-name" content="Code Playground">
+  <meta name="msapplication-tooltip" content="Code Playground">
+  <meta name="msapplication-starturl" content="/">
+
+  <!-- Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1f2c37">
+
+  <!-- iOS  -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Code Playground">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes">
+
+  <title>Code Playground</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.3/tailwind.min.css" />
+
+  <!-- Dependencies -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.13.5/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
+  <script defer type="application/javascript" src="https://cdn.jsdelivr.net/npm/console-log-html@2.0.2/console-log-html.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.9.0/minified.js" integrity="sha512-mzJLauQhxo8ETmHQ0TZAemNSywm9PRnHB0jvzxxC7piYMk4vvAtZXsA50JtGjlCtATlqSfMo0TB6qx/yaFOCIg==" crossorigin="anonymous"></script>
+
+  <!-- App data: App name, section content -->
+  <script src="./data.js"></script>
+
+  <!-- Core functionality -->
+  <script defer src="./playground.js"></script>
+
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
+
+    p + p {
+      margin-top: 1em;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-700 h-full md:flex md:flex-row w-full h-full" x-data="app()">
+  <!-- Navigation -->
+  <div @click.away="isNavigationOpen = false" class="flex flex-col w-full md:w-64 text-gray-200 bg-gray-800 flex-grow-0 flex-shrink-0 fixed top-0 left-0 md:static shadow z-40">
+    <!-- Header -->
+    <header class="flex-shrink-0 py-4 px-5 md:px-6 md:py-6 flex flex-row items-center justify-between">
+      <span class="text-lg font-semibold rounded-lg text-white" x-text="appTitle"></span>
+      <button class="rounded-lg md:hidden rounded-lg focus:outline-none focus:shadow-outline" @click="isNavigationOpen = !isNavigationOpen">
+        <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+          <path x-show="!isNavigationOpen" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+          <path x-show="isNavigationOpen" fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" x-cloak></path>
+        </svg>
+      </button>
+    </header>
+    <!-- /Header -->
+
+    <div :class="{ 'flex': isNavigationOpen, 'hidden': !isNavigationOpen }" class="flex-grow overflow-y-auto md:mt-6 max-h-72 md:max-h-screen pb-2 md:pb-0 md:flex flex-col-reverse md:flex-col justify-between" x-cloak>
+      <!-- Navigation Links -->
+      <nav class="overflow-y-auto">
+        <template x-for="(item, index) in Object.keys(sections)" :key="item" hidden>
+          <a class="block px-5 py-3 md:px-6 text-sm font-semibold hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-400 focus:outline-none focus:shadow-outline flex items-center" :href="'#' + convertToSlug(sections[item].title)" x-text="sections[item].title" @click="isNavigationOpen = !isNavigationOpen">
+          </a>
+        </template>
+      </nav>
+      <!-- /Navigation Links -->
+
+      <!-- Control Groups -->
+      <div class="py-4 px-5 md:px-6 md:py-6">
+        <button type="button" @click="toggleConsoleOutput($refs.main); isNavigationOpen = !isNavigationOpen;" id="show-console-button" class="inline-flex px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md shadow-sm font-medium text-gray-300 focus:outline-none focus:shadow-outline text-sm items-center md:w-full hover:text-white focus:text-white">
+          <!-- Heroicon name: view-list -->
+          <svg class="-ml-1 mr-0 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span x-text="isShowingConsole ? 'Hide Console Logs' : 'Display Console Logs'">Display Console Logs</span>
+        </button>
+      </div>
+      <!-- /Control Groups -->
+    </div>
+
+  </div>
+  <!-- /Navigation -->
+
+  <!-- Content -->
+  <main class="flex-grow flex-shrink max-h-screen mt-16 md:mt-0 text-gray-200 md:overflow-auto" x-ref="main">
+    <div class="py-4 px-5 md:px-6 md:py-6 grid grid-cols-1 divide-y divide-gray-500">
+      <template x-for="(item, index) in Object.keys(sections)" :key="item" hidden>
+        <!-- Code Group -->
+        <div :data-name="item" :id="convertToSlug(sections[item].title)" class="section">
+          <h2 :class="{ 'text-2xl font-bold mb-4 text-white': true, 'mt-4': index !== 0 }">
+            <a :href="'#' + convertToSlug(sections[item].title)" class="anchor" x-text="sections[item].title"></a>
+          </h2>
+
+          <div class="leading-5 mb-4 text-xs text-gray-300" x-html="sections[item].description"></div>
+
+          <template x-if="sections[item].code">
+            <div x-data="sectionBlock($el.parentElement.dataset.name)" x-init="initCodeEditor($el)">
+              <!-- Editor -->
+              <div class="rounded-md editor"></div>
+
+              <!-- Run Code Button -->
+              <button type="button" class="inline-flex px-4 py-2 bg-gray-500 hover:bg-gray-400 rounded-md shadow-sm font-medium text-gray-100 hover:text-white focus:bg-gray-400 focus:text-white focus:outline-none focus:shadow-outline mt-4 mb-4 items-center" @click="runCode">
+                <!-- Heroicon: solid/play -->
+                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                </svg>
+                <span>Run</span>
+              </button>
+
+              <!-- Reset Code Button -->
+              <button type="button" class="inline-flex px-4 py-2 bg-gray-500 hover:bg-gray-400 rounded-md shadow-sm font-medium text-gray-100 hover:text-white focus:bg-gray-400 focus:text-white focus:outline-none focus:shadow-outline mt-4 mb-4 items-center ml-2" @click="resetCode">
+                <!-- Heroicon: solid/play -->
+                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Reset</span>
+              </button>
+            </div>
+          </template>
+        </div>
+        <!-- /Code Group -->
+      </template>
+    </div>
+  </main>
+  <!-- /Content -->
+</body>
+</html>
