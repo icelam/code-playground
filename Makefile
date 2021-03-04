@@ -12,7 +12,7 @@ endef
 
 # Start dev server
 start:
-	@npx npx es-dev-server --root-dir ./src --app-index index.html --node-resolve --watch --open --port 8000
+	@npx es-dev-server@2.1.0 --root-dir ./src --app-index index.html --node-resolve --watch --open --port 8000
 
 # Create git hooks
 install-hooks:
