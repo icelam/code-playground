@@ -40,8 +40,9 @@ function createSandbox(code) {
   // create window and document with limited functionality
   var locals = {
     window: {
-      jwtToken: window.jwtToken,
-      docStore: window.docStore
+      // Put any global variables you want the code runner to be able to access here
+      // Example:
+      // jwtToken: window.jwtToken,
     },
     document: {}
   };
@@ -83,33 +84,80 @@ function app() {
     // Is console output div showing
     isShowingConsole: false,
 
+    // Console output element
+    consoleOutputDiv: undefined,
+
     // Append a div on screen to show the console output
     // or remove the div element when it is already there
     toggleConsoleOutput: function (container) {
       var consoleOutputDivId = 'console-output';
 
+      // Actual code to calculate the height after resize
+      var mousePosition;
+      var resizeConsoleOutput = function (event) {
+        var dy = mousePosition - event.y;
+        mousePosition = event.y;
+        var newHeight = (parseInt(getComputedStyle(this.consoleOutputDiv, '').height, 10) + dy);
+        var maxHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * 0.9;
+        this.consoleOutputDiv.style.height = `${
+          newHeight < 56
+            ? 56
+            : newHeight > maxHeight
+              ? maxHeight
+              : newHeight
+        }px`;
+      }.bind(this);
+
+      // Create and insert the console output div on screen
+      // Attach listeners required for resize together
       if (!this.isShowingConsole) {
-        var consoleOutputDiv = document.createElement('ul');
-        consoleOutputDiv.setAttribute('id', consoleOutputDivId);
-        consoleOutputDiv.setAttribute(
+        this.consoleOutputDiv = document.createElement('div');
+        this.consoleOutputDiv.setAttribute(
           'class',
-          'sticky bottom-0 left-0 bg-gray-900 z-40 w-full h-14 shadow-inner py-1 px-1 overflow-y-auto'
+          'sticky bottom-0 left-0 bg-gray-900 z-40 w-full h-14 shadow-inner pt-2 pb-1 px-1'
         );
-        container.appendChild(consoleOutputDiv);
+        this.consoleOutputDiv.setAttribute('id', consoleOutputDivId);
+
+        var consoleOutputUl = document.createElement('ul');
+        consoleOutputUl.setAttribute(
+          'class',
+          'overflow-y-auto h-full'
+        );
+        this.consoleOutputDiv.appendChild(consoleOutputUl);
+        container.appendChild(this.consoleOutputDiv);
 
         ConsoleLogHTML.DEFAULTS.log = 'text-white text-xs break-all';
         ConsoleLogHTML.DEFAULTS.debug = 'text-white text-xs break-all';
         ConsoleLogHTML.DEFAULTS.error = 'text-red-500 text-xs break-all';
         ConsoleLogHTML.DEFAULTS.warn = 'text-yellow-500 text-xs break-all';
         ConsoleLogHTML.DEFAULTS.info = 'text-blue-500 text-xs break-all';
-        ConsoleLogHTML.connect(document.getElementById(consoleOutputDivId));
+        ConsoleLogHTML.connect(consoleOutputUl);
         console.log('Showing console output on webpage.');
 
+        this.consoleOutputDiv.addEventListener('mousedown', function (event) {
+          mousePosition = event.y;
+          document.addEventListener('mousemove', resizeConsoleOutput, false);
+        }, false);
+
+        // Prevent dragging from children
+        // We only want it to be draggable by the handle bar
+        consoleOutputUl.addEventListener('mousedown', e => e.stopPropagation());
+
+        document.addEventListener('mouseup', function () {
+          document.removeEventListener('mousemove', resizeConsoleOutput, false);
+          document.removeEventListener('touchmove', resizeConsoleOutput, false);
+        }, false);
+
         this.isShowingConsole = true;
-      } else {
-        document.getElementById(consoleOutputDivId).remove();
-        this.isShowingConsole = false;
+        return;
       }
+
+      // Clean up console output div if it is already showing
+      document.removeEventListener('mouseup', resizeConsoleOutput, false);
+      this.consoleOutputDiv.removeEventListener('mousedown', resizeConsoleOutput, false);
+      this.consoleOutputDiv.remove();
+      this.consoleOutputDiv = undefined;
+      this.isShowingConsole = false;
     }
   };
 }
